@@ -179,31 +179,32 @@ $ grep -v '^#' SRP066632.tsv \
   | sed '1iSRA_Study\tDonor\tptprc\terbb2\ter\tpr\ther2\tSRA_Run_Count\tSRA_Run_Accs' \
   > SRP066632.tbl
 ```
-SRP066632|BRx-111|low |low |negative|negative|negative|8  |SRR3632476,SRR3632477,SRR3632474,SRR3632475,SRR3632472,SRR3632473,SRR3632470,SRR3632471
-:--------|:------|:---|:---|:-------|:-------|:-------|:--|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-SRP066632|BRx-129|high|low |negative|negative|negative|2  |SRR3632480,SRR3632481
-SRP066632|BRx-129|low |low |negative|negative|negative|2  |SRR3632478,SRR3632479
-SRP066632|BRx-131|low |low |negative|negative|negative|2  |SRR3632482,SRR3632483
-SRP066632|BRx-132|low |high|negative|negative|negative|2  |SRR3632484,SRR3632485
-SRP066632|BRx-136|low |high|negative|negative|negative|2  |SRR3632488,SRR3632489
-SRP066632|BRx-136|low |low |negative|negative|negative|2  |SRR3632486,SRR3632487
-SRP066632|BRx-139|low |low |negative|negative|negative|2  |SRR3632490,SRR3632491
-SRP066632|BRx-146|high|high|negative|negative|negative|2  |SRR3632494,SRR3632495
-SRP066632|BRx-146|high|low |negative|negative|negative|2  |SRR3632492,SRR3632493
-SRP066632|BRx-16 |high|low |negative|negative|negative|6  |SRR3632506,SRR3632507,SRR3632500,SRR3632501,SRR3632498,SRR3632499
-SRP066632|BRx-16 |low |low |negative|negative|negative|8  |SRR3632508,SRR3632509,SRR3632504,SRR3632505,SRR3632502,SRR3632503,SRR3632496,SRR3632497
-SRP066632|BRx-170|low |low |negative|negative|negative|4  |SRR3632512,SRR3632513,SRR3632510,SRR3632511
-SRP066632|BRx-172|high|low |negative|negative|negative|6  |SRR3632528,SRR3632529,SRR3632518,SRR3632519,SRR3632516,SRR3632517
-SRP066632|BRx-172|low |low |negative|negative|negative|24 |SRR3632542,SRR3632543,SRR3632540,SRR3632541,SRR3632538,SRR3632539,SRR3632536,SRR3632537,SRR3632534,SRR3632535,SRR3632532,SRR3632533,SRR3632530,SRR3632531,SRR3632526,SRR3632527,SRR3632524,SRR3632525,SRR3632522,SRR3632523,SRR3632520,SRR3632521,SRR3632514,SRR3632515
-SRP066632|BRx-180|high|low |negative|negative|negative|2  |SRR3632544,SRR3632545
-SRP066632|BRx-180|low |low |negative|negative|negative|2  |SRR3632546,SRR3632547
-SRP066632|BRx-183|low |high|negative|negative|negative|14 |SRR3632560,SRR3632561,SRR3632558,SRR3632559,SRR3632557,SRR3632556,SRR3632554,SRR3632555,SRR3632553,SRR3632552,SRR3632550,SRR3632551,SRR3632548,SRR3632549
-SRP066632|BRx-213|low |high|negative|negative|negative|2  |SRR3632564,SRR3632565
-SRP066632|BRx-213|low |low |negative|negative|negative|2  |SRR3632562,SRR3632563
-SRP066632|BRx-245|low |low |negative|negative|negative|2  |SRR3632566,SRR3632567
-SRP066632|BRx-42 |high|low |positive|positive|negative|2  |SRR2959923,SRR2959924
-SRP066632|BRx-42 |low |high|positive|positive|negative|10 |SRR2959911,SRR2959912,SRR2959909,SRR2959910,SRR2959907,SRR2959908,SRR2959905,SRR2959906,SRR2959903,SRR2959904
-SRP066632|BRx-42 |low |low |positive|positive|negative|6  |SRR2959925,SRR2959926,SRR2959901,SRR2959902,SRR2959899,SRR2959900
-SRP066632|BRx-82 |high|low |positive|positive|negative|4  |SRR2959921,SRR2959922,SRR2959913,SRR2959914
-SRP066632|BRx-82 |low |high|positive|positive|negative|18 |SRR2959947,SRR2959948,SRR2959945,SRR2959946,SRR2959941,SRR2959942,SRR2959939,SRR2959940,SRR2959935,SRR2959936,SRR2959933,SRR2959934,SRR2959931,SRR2959932,SRR2959929,SRR2959930,SRR2959915,SRR2959916
-SRP066632|BRx-82 |low |low |positive|positive|negative|10 |SRR2959943,SRR2959944,SRR2959937,SRR2959938,SRR2959927,SRR2959928,SRR2959919,SRR2959920,SRR2959917,SRR2959918
+SRA_Study|Donor  |ptprc|erbb2|er      |pr      |her2    |SRA_Run_Count|SRA_Run_Accs
+:--------|:------|:----|:----|:-------|:-------|:-------|:------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+SRP066632|BRx-111|low  |low  |negative|negative|negative|8            |SRR3632476, SRR3632477, SRR3632474, SRR3632475, SRR3632472, SRR3632473, SRR3632470, SRR3632471
+SRP066632|BRx-129|high |low  |negative|negative|negative|2            |SRR3632480, SRR3632481
+SRP066632|BRx-129|low  |low  |negative|negative|negative|2            |SRR3632478, SRR3632479
+SRP066632|BRx-131|low  |low  |negative|negative|negative|2            |SRR3632482, SRR3632483
+SRP066632|BRx-132|low  |high |negative|negative|negative|2            |SRR3632484, SRR3632485
+SRP066632|BRx-136|low  |high |negative|negative|negative|2            |SRR3632488, SRR3632489
+SRP066632|BRx-136|low  |low  |negative|negative|negative|2            |SRR3632486, SRR3632487
+SRP066632|BRx-139|low  |low  |negative|negative|negative|2            |SRR3632490, SRR3632491
+SRP066632|BRx-146|high |high |negative|negative|negative|2            |SRR3632494, SRR3632495
+SRP066632|BRx-146|high |low  |negative|negative|negative|2            |SRR3632492, SRR3632493
+SRP066632|BRx-16 |high |low  |negative|negative|negative|6            |SRR3632506, SRR3632507, SRR3632500, SRR3632501, SRR3632498, SRR3632499
+SRP066632|BRx-16 |low  |low  |negative|negative|negative|8            |SRR3632508, SRR3632509, SRR3632504, SRR3632505, SRR3632502, SRR3632503, SRR3632496, SRR3632497
+SRP066632|BRx-170|low  |low  |negative|negative|negative|4            |SRR3632512, SRR3632513, SRR3632510, SRR3632511
+SRP066632|BRx-172|high |low  |negative|negative|negative|6            |SRR3632528, SRR3632529, SRR3632518, SRR3632519, SRR3632516, SRR3632517
+SRP066632|BRx-172|low  |low  |negative|negative|negative|24           |SRR3632542, SRR3632543, SRR3632540, SRR3632541, SRR3632538, SRR3632539, SRR3632536, SRR3632537, SRR3632534, SRR3632535, SRR3632532, SRR3632533, SRR3632530, SRR3632531, SRR3632526, SRR3632527, SRR3632524, SRR3632525, SRR3632522, SRR3632523, SRR3632520, SRR3632521, SRR3632514, SRR3632515
+SRP066632|BRx-180|high |low  |negative|negative|negative|2            |SRR3632544, SRR3632545
+SRP066632|BRx-180|low  |low  |negative|negative|negative|2            |SRR3632546, SRR3632547
+SRP066632|BRx-183|low  |high |negative|negative|negative|14           |SRR3632560, SRR3632561, SRR3632558, SRR3632559, SRR3632557, SRR3632556, SRR3632554, SRR3632555, SRR3632553, SRR3632552, SRR3632550, SRR3632551, SRR3632548, SRR3632549
+SRP066632|BRx-213|low  |high |negative|negative|negative|2            |SRR3632564, SRR3632565
+SRP066632|BRx-213|low  |low  |negative|negative|negative|2            |SRR3632562, SRR3632563
+SRP066632|BRx-245|low  |low  |negative|negative|negative|2            |SRR3632566, SRR3632567
+SRP066632|BRx-42 |high |low  |positive|positive|negative|2            |SRR2959923, SRR2959924
+SRP066632|BRx-42 |low  |high |positive|positive|negative|10           |SRR2959911, SRR2959912, SRR2959909, SRR2959910, SRR2959907, SRR2959908, SRR2959905, SRR2959906, SRR2959903, SRR2959904
+SRP066632|BRx-42 |low  |low  |positive|positive|negative|6            |SRR2959925, SRR2959926, SRR2959901, SRR2959902, SRR2959899, SRR2959900
+SRP066632|BRx-82 |high |low  |positive|positive|negative|4            |SRR2959921, SRR2959922, SRR2959913, SRR2959914
+SRP066632|BRx-82 |low  |high |positive|positive|negative|18           |SRR2959947, SRR2959948, SRR2959945, SRR2959946, SRR2959941, SRR2959942, SRR2959939, SRR2959940, SRR2959935, SRR2959936, SRR2959933, SRR2959934, SRR2959931, SRR2959932, SRR2959929, SRR2959930, SRR2959915, SRR2959916
+SRP066632|BRx-82 |low  |low  |positive|positive|negative|10           |SRR2959943, SRR2959944, SRR2959937, SRR2959938, SRR2959927, SRR2959928, SRR2959919, SRR2959920, SRR2959917, SRR2959918
