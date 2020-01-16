@@ -1,5 +1,6 @@
 library(Seurat)
 library(dplyr)
+
 read_data <- function(rnaseq_counts_folder){
   
   # get list of files with PROJECT/CELL.tsv
@@ -41,6 +42,20 @@ read_data <- function(rnaseq_counts_folder){
   return(rnaseq_counts_projects)
 }
 
+# umbrella function to run pca on all rnaseq counts objects from the projects
+
+run_seurat_pca_on_projects <- function(project_counts){
+  seurat_objs <- vector(mode="list", length=length(project_counts))
+  names(seurat_objs) <- names(project_counts)
+  for(project in names(project_counts)){
+    pca_clusters <- init_seurat_and_run_pca(project_counts[[project]], project)
+    seurat_objs[[project]] <- pca_clusters
+  }
+  return(seurat_objs)
+}
+
+# utility functions for suerat
+
 # 1
 init_seurat_and_run_pca <- function (counts_df, project){
   seurat_obj <- CreateSeuratObject(counts_df, proj=project, min.cells = 3, min.features = 200)
@@ -60,6 +75,7 @@ init_seurat_and_run_pca <- function (counts_df, project){
   seurat_obj <- RunPCA(seurat_obj)
 
 }
+
 # 2
 plot_pca <- function(seurat_obj, quick_run){
   if(quick_run){
@@ -70,6 +86,29 @@ plot_pca <- function(seurat_obj, quick_run){
     JackStrawPlot(seurat_obj, dims = 1:15)
   }  
 }
+
+# run clustering on the entirety
+run_cluster_on_seurat_objs <- function(seurat_pca_objs, num_dim_list){
+  seurat_cluster_objs <- vector(mode="list", length=length(seurat_pca_objs))
+  names(seurat_cluster_objs) <- names(seurat_pca_objs)
+  for(project in names(seurat_pca_objs)){
+    clusters <- run_cluster(seurat_pca_objs[[project]], num_dim_list[[project]])
+    seurat_cluster_objs[[project]] <- clusters
+  }
+  return(seurat_cluster_objs)
+}
+
+# get cluster counts for all
+get_cluster_counts <- function(suerat_cluster_objs){
+  num_cluser_list <- vector(mode="list", length=length(suerat_cluster_objs))
+  names(num_cluser_list) <- names(num_cluser_list)
+  for(project in names(suerat_cluster_objs)){
+    num_clusters <- get_num_clusters(suerat_cluster_objs[[project]])
+    num_cluser_list[[project]] <- num_clusters
+  }
+  return(num_cluser_list)
+}
+
 # 3
 run_cluster <- function(seurat_obj, num_dim) {
     
@@ -81,10 +120,19 @@ run_cluster <- function(seurat_obj, num_dim) {
     
     return(seurat_obj)
 }
+
+get_num_clusters <- function(seurat_obj){
+  
+  length(unique(Idents(seurat_obj)))
+  
+}
+
 # 4
 plot_cluster <- function(seurat_obj){
   
   # plot
   
   DimPlot(seurat_obj, reduction = "umap")
+  
 }
+
