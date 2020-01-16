@@ -1,6 +1,8 @@
 library(Seurat)
 library(dplyr)
 
+# https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html as a reference
+
 read_data <- function(rnaseq_counts_folder){
   
   # get list of files with PROJECT/CELL.tsv
@@ -43,15 +45,38 @@ read_data <- function(rnaseq_counts_folder){
 }
 
 # umbrella function to run pca on all rnaseq counts objects from the projects
-
 run_seurat_pca_on_projects <- function(project_counts){
   seurat_objs <- vector(mode="list", length=length(project_counts))
   names(seurat_objs) <- names(project_counts)
   for(project in names(project_counts)){
-    pca_clusters <- init_seurat_and_run_pca(project_counts[[project]], project)
-    seurat_objs[[project]] <- pca_clusters
+    pca_dims <- init_seurat_and_run_pca(project_counts[[project]], project)
+    seurat_objs[[project]] <- pca_dims
   }
   return(seurat_objs)
+}
+
+### USE plot_pca FUNCTION TO DETERMINE THE NUMBER OF DIMENSIONS TO PASS INTO CLUSTERING
+
+# run clustering on the entirety
+run_cluster_on_seurat_objs <- function(seurat_pca_objs, num_dim_list){
+  seurat_cluster_objs <- vector(mode="list", length=length(seurat_pca_objs))
+  names(seurat_cluster_objs) <- names(seurat_pca_objs)
+  for(project in names(seurat_pca_objs)){
+    clusters <- run_cluster(seurat_pca_objs[[project]], num_dim_list[[project]])
+    seurat_cluster_objs[[project]] <- clusters
+  }
+  return(seurat_cluster_objs)
+}
+
+# get cluster counts for all
+get_cluster_counts <- function(suerat_cluster_objs){
+  num_cluser_list <- vector(mode="list", length=length(suerat_cluster_objs))
+  names(num_cluser_list) <- names(suerat_cluster_objs)
+  for(project in names(suerat_cluster_objs)){
+    num_clusters <- get_num_clusters(suerat_cluster_objs[[project]])
+    num_cluser_list[[project]] <- num_clusters
+  }
+  return(num_cluser_list)
 }
 
 # utility functions for suerat
@@ -87,28 +112,6 @@ plot_pca <- function(seurat_obj, quick_run){
   }  
 }
 
-# run clustering on the entirety
-run_cluster_on_seurat_objs <- function(seurat_pca_objs, num_dim_list){
-  seurat_cluster_objs <- vector(mode="list", length=length(seurat_pca_objs))
-  names(seurat_cluster_objs) <- names(seurat_pca_objs)
-  for(project in names(seurat_pca_objs)){
-    clusters <- run_cluster(seurat_pca_objs[[project]], num_dim_list[[project]])
-    seurat_cluster_objs[[project]] <- clusters
-  }
-  return(seurat_cluster_objs)
-}
-
-# get cluster counts for all
-get_cluster_counts <- function(suerat_cluster_objs){
-  num_cluser_list <- vector(mode="list", length=length(suerat_cluster_objs))
-  names(num_cluser_list) <- names(num_cluser_list)
-  for(project in names(suerat_cluster_objs)){
-    num_clusters <- get_num_clusters(suerat_cluster_objs[[project]])
-    num_cluser_list[[project]] <- num_clusters
-  }
-  return(num_cluser_list)
-}
-
 # 3
 run_cluster <- function(seurat_obj, num_dim) {
     
@@ -136,3 +139,24 @@ plot_cluster <- function(seurat_obj){
   
 }
 
+
+'
+Our Script
+source("~/single-cell-comparison/seurat_scriping.R")
+load("~/R_Data/counts_data.RData")
+pca_seurat_dims <- run_seurat_pca_on_projects(rnaseq_counts_projects)
+num_dim_list <- <- vector(mode="list", length=length(pca_seurat_dims))
+names(num_dim_list) <- names(pca_seurat_dims)
+plot_pca(pca_seurat_dims$SRP011546, TRUE)
+num_dim_list$SRP011546 <- 12
+plot_pca(pca_seurat_dims$SRP050499, TRUE)
+num_dim_list$SRP050499 <- 15
+plot_pca(pca_seurat_dims$SRP057196, TRUE)
+num_dim_list$SRP057196 <- 12
+plot_pca(pca_seurat_dims$SRP061549, TRUE)
+num_dim_list$SRP061549 <- 7
+plot_pca(pca_seurat_dims$SRP066632, TRUE)
+num_dim_list$SRP066632 <- 15
+clustering_seurat_objs <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
+cluster_counts <- get_cluster_counts(clustering_seurat_objs)
+''
