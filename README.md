@@ -12,7 +12,7 @@ Identifying publicly submitted projects relevant to a research goal for baseline
  Internal consistency, comparison with selected reference sets (either bulk or other single-cell), and aggregate properties of alignment against genome can all be used for this comparison. Alignment against genome could be based on methods in use now, as could comparison with selected reference datasets for which some results have been precomputed. 
  
  ## Methods and Proposed Solution
- We will use basic data processing tools like Python, shell-scripting, and R to do data-wrangling. We will use a variety of statistical methods (some basic, like [Spearman Rank Correlation](https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient), and some bioinformatics-specific, like [Seurat](https://satijalab.org/seurat/)) in R to assess accuracy of metadata submitted for fields like cell type and number of cells.
+ We will use basic data processing tools like Python, shell-scripting, and R to do data-wrangling. We will use a variety of statistical methods (some basic, like [Spearman Rank Correlation](https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient), and some bioinformatics-specific, like [Seurat](https://satijalab.org/seurat/)) in R to assess accuracy of metadata submitted for fields like cell type and number of cells. For example, we can compare the output of Seurat's clustering (i.e the number of clusters) against what is submitted in the metadata.  A large deviation would suggest something is wrong with the metadata.
  
  ## Impact 
  Using metadata and generating metrics for comparison can help to identify interesting features in research results.
@@ -21,3 +21,8 @@ Identifying publicly submitted projects relevant to a research goal for baseline
  ## Lessons Learned
 
 ## Datasets Used
+We downloaded [SRA](https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/) files.  SRA single cell projects which met the following criteria were used as illustrative examples:
+- mostly human
+- one to one run to cell mapping for most of the project
+- 100 to 10000 cells sampled
+- interesting range of sample attributes (disease or developmental ES stages)
