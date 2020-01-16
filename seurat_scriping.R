@@ -1,9 +1,8 @@
 library(Seurat)
 library(dplyr)
-read_data <- function(){
+read_data <- function(rnaseq_counts_folder){
   
   # get list of files with PROJECT/CELL.tsv
-  rnaseq_counts_folder <- "/data/gene_count_length_files/"
   rnaseq_counts_projects_names <- list.files(path=rnaseq_counts_folder)
   rnaseq_counts_projects <- vector(mode="list", length=length(rnaseq_counts_projects_names))
   names(rnaseq_counts_projects) <- rnaseq_counts_projects_names
