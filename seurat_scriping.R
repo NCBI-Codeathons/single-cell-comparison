@@ -34,8 +34,54 @@ read_data <- function(rnaseq_counts_folder){
     print(full_project_df)
     #put the project into the project list
     rownames(full_project_df) <- full_project_df$Geneid
+    full_project_df$Geneid <- NULL
     rnaseq_counts_projects[[project]] <- full_project_df
     
   }
   return(rnaseq_counts_projects)
+}
+
+# 1
+init_seurat_and_plot_init_features <- function (counts_df, project, quick_run){
+  seurat_obj <- CreateSeuratObject(counts_df, proj=project, min.cells = 3, min.features = 200)
+  seurat_obj <- NormalizeData(seurat_obj, normalization.method = "LogNormalize", scale.factor = 10000)
+
+  # scale data
+  
+  seurat_obj <- FindVariableFeatures(seurat_obj, selection.method = "vst", nfeatures = 2000)
+  top10 <- head(VariableFeatures(seurat_obj), 10)
+  
+  # plot variable features with and without labels
+  plot1 <- VariableFeaturePlot(seurat_obj)
+  plot2 <- LabelPoints(plot = plot1, points = top10, repel = TRUE)
+  CombinePlots(plots = list(plot1, plot2))
+ 
+  # scale data
+  all.genes <- rownames(seurat_obj)
+  
+  seurat_obj <- ScaleData(seurat_obj, features = all.genes)
+  
+  # run PCA
+  seurat_obj <- RunPCA(seurat_obj)
+  
+  # Some PCA Viz
+  VizDimLoadings(seurat_obj, dims = 1:2, reduction = "pca")
+  DimPlot(seurat_obj, reduction = "pca")
+  
+  if(quick_run){
+    ElbowPlot(seurat_obj)
+  } else{
+    seurat_obj <- JackStraw(seurat_obj, num.replicate = 100)
+    seurat_obj <- ScoreJackStraw(seurat_obj, dims = 1:20)
+    JackStrawPlot(seurat_obj, dims = 1:15)
+  }
+  
+  # Do clustering (hardcoded 10 for now - need to understand why breaking this up into functions does not work)
+  
+  seurat_obj <- FindNeighbors(seurat_obj, dims = 1:10)
+  seurat_obj <- FindClusters(seurat_obj, resolution = 0.5)
+  
+  seurat_obj <- RunUMAP(seurat_obj, dims = 1:10)
+  
+  DimPlot(seurat_obj, reduction = "umap")
 }
