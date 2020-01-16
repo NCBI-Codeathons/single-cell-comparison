@@ -35,7 +35,7 @@ read_data <- function(){
     
     #put the project into the project list
     rownames(full_project_df) <- full_project_df$Geneid
-    rnaseq_counts_projects$project <- full_project_df
+    rnaseq_counts_projects[project] <- full_project_df
     
   }
 }
