@@ -3,7 +3,10 @@ library(dplyr)
 
 # https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html as a reference
 
-read_data <- function(rnaseq_counts_folder){
+read_data <- function(rnaseq_counts_folder, normalized){
+  
+  # rnaseq_counts_folder should have a trailing slash
+  # normalized indicates if this is jim's normalized data or not
   
   # get list of files with PROJECT/CELL.tsv
   rnaseq_counts_projects_names <- list.files(path=rnaseq_counts_folder)
@@ -21,12 +24,22 @@ read_data <- function(rnaseq_counts_folder){
     for (file in project_cell_files) {
       
       # read in each file
-      file_df <- read.table(file=paste(full_project_path, file, sep='/'), sep="\t", header=TRUE)
+      if(normalized){
+        file_df <- read.table(file=paste(full_project_path, file, sep='/'))
+      }else{
+        file_df <- read.table(file=paste(full_project_path, file, sep='/'), sep="\t", header=TRUE)
+      }
+      
       
       # alter column name of hits to be that of the cell
       cell <- strsplit(file, '.tsv')[[1]]
       colnames(file_df) <- gsub(".*\\.bam", cell, colnames(file_df))
-      
+      if(normalized){
+        file_df$Length <- NULL
+        colnames(file_df)[1] <- 'Length'
+        file_df$Geneid <- as.numeric(rownames(file_df))
+        rownames(file_df) <- NULL
+      }
       # merge into full dataframe for the project
       full_project_df <- merge(x=full_project_df, y=file_df, all=TRUE, by='Geneid')
       full_project_df$Length <- coalesce(full_project_df$Length.x, full_project_df$Length.y)
@@ -44,12 +57,21 @@ read_data <- function(rnaseq_counts_folder){
   return(rnaseq_counts_projects)
 }
 
+write_list_of_dfs <- function(list_of_dfs, dir){
+  # dir ends in /
+  for(project in names(list_of_dfs)){
+    filename <- paste(paste(dir, project, sep=''), ".tsv", sep="")
+    print(filename)
+    write.table(list_of_dfs[[project]], file=filename)
+  }
+}
+
 # umbrella function to run pca on all rnaseq counts objects from the projects
-run_seurat_pca_on_projects <- function(project_counts){
+run_seurat_pca_on_projects <- function(project_counts, noramlize){
   seurat_objs <- vector(mode="list", length=length(project_counts))
   names(seurat_objs) <- names(project_counts)
   for(project in names(project_counts)){
-    pca_dims <- init_seurat_and_run_pca(project_counts[[project]], project)
+    pca_dims <- init_seurat_and_run_pca(project_counts[[project]], project, noramlize)
     seurat_objs[[project]] <- pca_dims
   }
   return(seurat_objs)
@@ -69,22 +91,49 @@ run_cluster_on_seurat_objs <- function(seurat_pca_objs, num_dim_list){
 }
 
 # get cluster counts for all
-get_cluster_counts <- function(suerat_cluster_objs){
-  num_cluser_list <- vector(mode="list", length=length(suerat_cluster_objs))
-  names(num_cluser_list) <- names(suerat_cluster_objs)
-  for(project in names(suerat_cluster_objs)){
-    num_clusters <- get_num_clusters(suerat_cluster_objs[[project]])
+get_cluster_counts <- function(seurat_cluster_objs){
+  num_cluser_list <- vector(mode="list", length=length(seurat_cluster_objs))
+  names(num_cluser_list) <- names(seurat_cluster_objs)
+  for(project in names(seurat_cluster_objs)){
+    num_clusters <- get_num_clusters(seurat_cluster_objs[[project]])
     num_cluser_list[[project]] <- num_clusters
   }
   return(num_cluser_list)
 }
 
+#get embeddings for all proejcts
+get_project_umap_embeddings <- function(seurat_cluster_objs){
+  embeddings <- vector(mode="list", length=length(seurat_cluster_objs))
+  names(embeddings) <- names(seurat_cluster_objs)
+  for(project in names(seurat_cluster_objs)){
+    project_embeddings <- get_umap_embeddings(seurat_cluster_objs[[project]])
+    embeddings[[project]] <- project_embeddings
+  }
+  return(embeddings)
+  
+}
+
+#get assignemnts for all proejcts
+get_project_cluster_assignments <- function(seurat_cluster_objs){
+  embeddings <- vector(mode="list", length=length(seurat_cluster_objs))
+  names(embeddings) <- names(seurat_cluster_objs)
+  for(project in names(seurat_cluster_objs)){
+    project_embeddings <- get_cluster_assignments(seurat_cluster_objs[[project]])
+    embeddings[[project]] <- project_embeddings
+  }
+  return(embeddings)
+  
+}
+
 # utility functions for suerat
 
 # 1
-init_seurat_and_run_pca <- function (counts_df, project){
+init_seurat_and_run_pca <- function (counts_df, project, normalize=TRUE){
   seurat_obj <- CreateSeuratObject(counts_df, proj=project, min.cells = 3, min.features = 200)
-  seurat_obj <- NormalizeData(seurat_obj, normalization.method = "LogNormalize", scale.factor = 10000)
+  if(normalize){
+    seurat_obj <- NormalizeData(seurat_obj, normalization.method = "LogNormalize", scale.factor = 10000)
+  }
+  
 
   # find features
   
@@ -139,13 +188,27 @@ plot_cluster <- function(seurat_obj){
   
 }
 
+get_umap_embeddings <- function(seurat_obj){
+  
+  return(seurat_obj@reductions$umap@cell.embeddings)
+  
+}
 
+get_cluster_assignments <- function(seurat_obj){
+  
+  return(Idents(seurat_obj))
+  
+}
+
+
+
+# Our Script
 '
-Our Script
 source("~/single-cell-comparison/seurat_scriping.R")
+#rnaseq_counts_projects <- read_data("/data/gene_count_length_files/", FALSE)
 load("~/R_Data/counts_data.RData")
 pca_seurat_dims <- run_seurat_pca_on_projects(rnaseq_counts_projects)
-num_dim_list <- <- vector(mode="list", length=length(pca_seurat_dims))
+num_dim_list <- vector(mode="list", length=length(pca_seurat_dims))
 names(num_dim_list) <- names(pca_seurat_dims)
 plot_pca(pca_seurat_dims$SRP011546, TRUE)
 num_dim_list$SRP011546 <- 12
@@ -158,5 +221,47 @@ num_dim_list$SRP061549 <- 7
 plot_pca(pca_seurat_dims$SRP066632, TRUE)
 num_dim_list$SRP066632 <- 15
 clustering_seurat_objs <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
+cluster_assignment_list <- get_project_cluster_assignments(clustering_seurat_objs)
 cluster_counts <- get_cluster_counts(clustering_seurat_objs)
+write_list_of_dfs(cluster_assignment_list, "/data/cluster_assignments_counts/")
+
+load("~/R_Data/normalized_data.RData")
+
+
+# FALSE for normalization to be performed by Seurat
+pca_seurat_dims <- run_seurat_pca_on_projects(normalized_rpkm_data, FALSE)
+num_dim_list <- vector(mode="list", length=length(pca_seurat_dims))
+names(num_dim_list) <- names(pca_seurat_dims)
+plot_pca(pca_seurat_dims$SRP011546, TRUE)
+num_dim_list$SRP011546 <- 13
+plot_pca(pca_seurat_dims$SRP050499, TRUE)
+num_dim_list$SRP050499 <- 12
+plot_pca(pca_seurat_dims$SRP057196, TRUE)
+num_dim_list$SRP057196 <- 12
+plot_pca(pca_seurat_dims$SRP061549, TRUE)
+num_dim_list$SRP061549 <- 7
+plot_pca(pca_seurat_dims$SRP066632, TRUE)
+num_dim_list$SRP066632 <- 17
+clustering_seurat_objs <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
+cluster_assignment_list <- get_project_cluster_assignments(clustering_seurat_objs)
+cluster_counts <- get_cluster_counts(clustering_seurat_objs)
+write_list_of_dfs(cluster_assignment_list, "/data/cluster_assignments_rpkm/")
+
+pca_seurat_dims <- run_seurat_pca_on_projects(normalized_tpm_data, FALSE)
+num_dim_list <- vector(mode="list", length=length(pca_seurat_dims))
+names(num_dim_list) <- names(pca_seurat_dims)
+plot_pca(pca_seurat_dims$SRP011546, TRUE)
+num_dim_list$SRP011546 <- 13
+plot_pca(pca_seurat_dims$SRP050499, TRUE)
+num_dim_list$SRP050499 <- 12
+plot_pca(pca_seurat_dims$SRP057196, TRUE)
+num_dim_list$SRP057196 <- 12
+plot_pca(pca_seurat_dims$SRP061549, TRUE)
+num_dim_list$SRP061549 <- 9
+plot_pca(pca_seurat_dims$SRP066632, TRUE)
+num_dim_list$SRP066632 <- 15
+clustering_seurat_objs <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
+cluster_assignment_list <- get_project_cluster_assignments(clustering_seurat_objs)
+cluster_counts <- get_cluster_counts(clustering_seurat_objs)
+write_list_of_dfs(cluster_assignment_list, "/data/cluster_assignments_tpm/")
 '
