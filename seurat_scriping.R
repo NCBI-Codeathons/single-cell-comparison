@@ -205,9 +205,10 @@ get_cluster_assignments <- function(seurat_obj){
 # Our Script
 '
 source("~/single-cell-comparison/seurat_scriping.R")
-#rnaseq_counts_projects <- read_data("/data/gene_count_length_files/", FALSE)
+# rnaseq_counts_projects <- read_data("/data/gene_count_length_files/", FALSE)
 load("~/R_Data/counts_data.RData")
-pca_seurat_dims <- run_seurat_pca_on_projects(rnaseq_counts_projects)
+pca_seurat_dims <- run_seurat_pca_on_projects(rnaseq_counts_projects, TRUE)
+
 num_dim_list <- vector(mode="list", length=length(pca_seurat_dims))
 names(num_dim_list) <- names(pca_seurat_dims)
 plot_pca(pca_seurat_dims$SRP011546, TRUE)
@@ -220,10 +221,10 @@ plot_pca(pca_seurat_dims$SRP061549, TRUE)
 num_dim_list$SRP061549 <- 7
 plot_pca(pca_seurat_dims$SRP066632, TRUE)
 num_dim_list$SRP066632 <- 15
-clustering_seurat_objs <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
-cluster_assignment_list <- get_project_cluster_assignments(clustering_seurat_objs)
-cluster_counts <- get_cluster_counts(clustering_seurat_objs)
-write_list_of_dfs(cluster_assignment_list, "/data/cluster_assignments_counts/")
+clustering_seurat_objs_counts <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
+cluster_assignment_list_counts <- get_project_cluster_assignments(clustering_seurat_objs_counts)
+cluster_counts_counts <- get_cluster_counts(clustering_seurat_objs_counts)
+write_list_of_dfs(cluster_assignment_list_counts, "/data/cluster_assignments_counts/")
 
 load("~/R_Data/normalized_data.RData")
 
@@ -242,10 +243,10 @@ plot_pca(pca_seurat_dims$SRP061549, TRUE)
 num_dim_list$SRP061549 <- 7
 plot_pca(pca_seurat_dims$SRP066632, TRUE)
 num_dim_list$SRP066632 <- 17
-clustering_seurat_objs <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
-cluster_assignment_list <- get_project_cluster_assignments(clustering_seurat_objs)
-cluster_counts <- get_cluster_counts(clustering_seurat_objs)
-write_list_of_dfs(cluster_assignment_list, "/data/cluster_assignments_rpkm/")
+clustering_seurat_objs_rpkm <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
+cluster_assignment_list_rpkm <- get_project_cluster_assignments(clustering_seurat_objs_rpkm)
+cluster_counts_rpkm <- get_cluster_counts(clustering_seurat_objs_rpkm)
+write_list_of_dfs(cluster_assignment_list_rpkm, "/data/cluster_assignments_rpkm/")
 
 pca_seurat_dims <- run_seurat_pca_on_projects(normalized_tpm_data, FALSE)
 num_dim_list <- vector(mode="list", length=length(pca_seurat_dims))
@@ -259,9 +260,9 @@ num_dim_list$SRP057196 <- 12
 plot_pca(pca_seurat_dims$SRP061549, TRUE)
 num_dim_list$SRP061549 <- 9
 plot_pca(pca_seurat_dims$SRP066632, TRUE)
-num_dim_list$SRP066632 <- 15
-clustering_seurat_objs <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
-cluster_assignment_list <- get_project_cluster_assignments(clustering_seurat_objs)
-cluster_counts <- get_cluster_counts(clustering_seurat_objs)
-write_list_of_dfs(cluster_assignment_list, "/data/cluster_assignments_tpm/")
+num_dim_list$SRP066632 <- 17
+clustering_seurat_objs_tpm <- run_cluster_on_seurat_objs(pca_seurat_dims, num_dim_list)
+cluster_assignment_list_tpm <- get_project_cluster_assignments(clustering_seurat_objs_tpm)
+cluster_counts_tpm <- get_cluster_counts(clustering_seurat_objs_tpm)
+write_list_of_dfs(cluster_assignment_list_tpm, "/data/cluster_assignments_tpm/")
 '
