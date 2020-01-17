@@ -14,7 +14,7 @@ Identifying publicly submitted projects relevant to a research goal for baseline
 ## Methods and Approach
 We will use basic data processing tools like Python, shell-scripting, and R to do data-wrangling. We will use a variety of statistical methods (some basic, like [Spearman Rank Correlation](https://en.wikipedia.org/wiki/Spearman%27s_rank_correlation_coefficient), and some bioinformatics-specific, like [Seurat](https://satijalab.org/seurat/)) in R to assess accuracy of metadata submitted for fields like cell type and number of cells. For example, we can compare the output of Seurat's clustering (i.e the number of clusters) against what is submitted in the metadata.  A large deviation would suggest something is wrong with the metadata.
 
-More specifically, we downloaded the metadata, tabulated it using `Perl` and shell scripting (see [Tabluating_Metadata.md](./Tabluating_Metadata.md)).  This gives us a rough way of looking at "cell types."  We then took cleaned gene expression data aligned with Hisat2 and passed it through a Seurat pipeline similar to the one on the [website](https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html).
+More specifically, we downloaded the metadata, tabulated it using `Perl` and shell scripting (see [Tabluating_Metadata.md](./Tabulating_Metadata.md)).  This gives us a rough way of looking at "cell types."  We then took cleaned gene expression data aligned with Hisat2 and passed it through a Seurat pipeline similar to the one on the [website](https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html).
 Hisat2 was configured to retain up to 5 alignments against GRCh38.  FeatureCounts was used with these alignments and NCBI's annotation of the genome to generate gene counts.  Options to include multiply placed reads and overlapping features were used, with fractional weighting for such reads in the gene feature counts.  The output of Seurat, the clusters, should represent cell types and was compared to the cell types obtained from downloading the metadata.
 
 ## Impact
@@ -27,3 +27,5 @@ We downloaded [SRA](https://www.ncbi.nlm.nih.gov/sra/docs/sradownload/) files.  
 - one to one run to cell mapping for most of the project
 - 100 to 10000 cells sampled
 - interesting range of sample attributes (disease or developmental ES stages)
+
+## [Results](./RESULTS.md)
