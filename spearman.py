@@ -56,7 +56,7 @@ p_rank = pd.DataFrame(data=rank_mat[0:,0:])
 link = hc.linkage(p_rank,method='centroid')
 o1 = hc.leaves_list(link)
 disp_mat = p_rank.iloc[o1,:]
-disp_mat = p_rank.iloc[:, o1[::-1]]
+disp_mat = disp_mat.iloc[:, o1[::-1]]
 pyplot.imshow(disp_mat)
 pyplot.savefig('SRP011546.png')
 
