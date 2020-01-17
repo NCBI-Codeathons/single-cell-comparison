@@ -57,6 +57,8 @@ Seurat_Cluster|Dev_Stage
 1             |GW19.5, GW20.5, GW23.5
 2             |GW19.5, GW20.5, GW23.5
 
+![SRP061549_rank](images/SRP061549_rank_counts.png)
+
 ## TPM Nornmalization
 The following data were obtained by normalizing TPM counts.
 
