@@ -2,7 +2,7 @@
 For each project analyzed, we computed cell clusters using Seurat and asked whether the sample attributes as submitted by the authors corresponds to unique clusters. Shown below are scatter plots of clusters as computed by Seurat followed by a table with sample attributes that fall within those clusters. Ideally, each cluster should correspond to a unique sample attribute, though that does not always seems to be the case.
 
 ## Seurat Normalized
-The following data were obtained using Seurat's default normalization prodcedure.
+The following data were obtained using Seurat's default normalization procedure which is a log normalization.
 ### SRP011546
 ![SRP011546](images/SRP011546_counts.png)   
 
