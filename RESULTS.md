@@ -13,6 +13,9 @@ Seurat_Cluster|Sample_Attributes
 2             |2-cell embryo, 4-cell embryo, 8-cell embryo, Oocyte, Zygote
 3             |Late blastocyst
 
+For this project, a heatmap with recognizable clusters of runs using spearman rank correlation between run pairs exists as well.  Five clusters are visible, with several outlier runs identifiable.  Quantitative elaboration tbd.
+![SRP011546_ranks](images/SRP011546_rankcorr_counts.png)
+
 ### SRP057196
 ![SRP057196](images/SRP057196_counts.png)   
 
