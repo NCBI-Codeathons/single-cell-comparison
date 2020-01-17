@@ -208,6 +208,7 @@ source("~/single-cell-comparison/seurat_scriping.R")
 # rnaseq_counts_projects <- read_data("/data/gene_count_length_files/", FALSE)
 load("~/R_Data/counts_data.RData")
 pca_seurat_dims <- run_seurat_pca_on_projects(rnaseq_counts_projects, TRUE)
+
 num_dim_list <- vector(mode="list", length=length(pca_seurat_dims))
 names(num_dim_list) <- names(pca_seurat_dims)
 plot_pca(pca_seurat_dims$SRP011546, TRUE)
